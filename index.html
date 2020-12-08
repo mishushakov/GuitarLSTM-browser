@@ -1,0 +1,64 @@
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://unpkg.com/pcm-player"></script>
+</head>
+<body>
+  <h1>GuitarLSTM - Browser Experiment</h1>
+
+  <h2>1. Upload a tensor</h2>
+  <input type="file" accept=".json" id="uploader" onchange="upload()" />
+  <br>
+  <br>
+  <label><a href="https://github.com/mishushakov/GuitarLSTM-browser">How to convert an audio to tensor?</a></label>
+
+  <h2>2. Select the model</h2>
+  <select>
+    <option disabled selected>Ibanez Tube Screamer TS9 (ts9sm)</option>
+  </select>
+  <br>
+  <br>
+  <label>Uploading models is not supported. To add your models, <a href="https://github.com/mishushakov/GuitarLSTM-browser">fork the repository</a></label>
+
+  <h2>3. Predict the result</h2>
+  <button onclick="predict()">Predict</button>
+  <br>
+  <br>
+  <label>You'll hear the sound as soon as the prediction is completed</label>
+
+  <script>
+    let tensor
+    const upload = () => {
+      const json = document.getElementById('uploader').files[0]
+      const reader = new FileReader()
+      reader.onload = () => tensor = JSON.parse(reader.result).tensor
+      reader.readAsText(json)
+    }
+
+    const predict = async () => {
+      const model = await tf.loadLayersModel('/models/ts9sm/model.json')
+      if (!tensor){
+        alert('Please upload valid tensor!')
+        return
+      }
+
+      const t = tf.tensor(tensor)
+      const result = await model.predict(t)
+      const audiodata = (await result.data())
+
+      const AudioContext = window.AudioContext || window.webkitAudioContext
+      const context = new AudioContext()
+
+      const channels = 1
+      const sampleRate = 44100
+      const frames = sampleRate * 3
+
+      const buffer = context.createBuffer(channels, frames, sampleRate)
+      buffer.getChannelData(0).set(audiodata)
+
+      const source = context.createBufferSource()
+      source.buffer = buffer
+      source.connect(context.destination)
+      source.start(0)
+    }
+  </script>
+</body>
