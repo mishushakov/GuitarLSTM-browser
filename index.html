@@ -35,7 +35,7 @@
     }
 
     const predict = async () => {
-      const model = await tf.loadLayersModel('/models/ts9sm/model.json')
+      const model = await tf.loadLayersModel('models/ts9sm/model.json')
       if (!tensor){
         alert('Please upload valid tensor!')
         return

@@ -53,5 +53,6 @@ const model = await tf.loadLayersModel('/models/ts9sm/model.json')
 
 ### Areas of improvement / Future work
 
-- Make possible to upload .wav files instead of .json tensors
-- Allow effects (with projects like [Tone.js](https://tonejs.github.io/))
+- Make possible to work with .wav files natively instead of tensors
+- Make possible to upload/specify custom models
+- Add effects (with projects like [Tone.js](https://tonejs.github.io/))
