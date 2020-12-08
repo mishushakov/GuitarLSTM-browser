@@ -45,6 +45,7 @@ tensorflowjs_converter --input_format keras models/t9sm/t9sm.h5 models/t9sm/t9sm
 ```
 
 Then download the resulting files (.json, .bin)
+
 Specify the path to your `.json` file by changing this line in [index.html](index.html)
 
 ```js
